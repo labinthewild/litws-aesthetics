@@ -14,10 +14,11 @@ window.$ = window.jQuery = require("jquery");
 window.bootstrap = require("bootstrap");
 require("jquery-ui-bundle");
 var _ = require('lodash');
-var introTemplate = require("../templates/introduction.html");
+var introTemplate = require("./pages/introduction.html");
 var irbTemplate = require("../templates/irb.html");
 var demographicsTemplate = require("../templates/demographics.html");
-var instructionsTemplate = require("../templates/instructions.html");
+var instructionsTemplate = require("./pages/instructions.html");
+var aestheticQuestion = require("./pages/aesthetic-question.html")
 var loadingTemplate = require("../templates/loading.html");
 var resultsTemplate = require("../templates/results.html");
 var resultsFooter = require("../templates/results-footer.html");
@@ -45,6 +46,21 @@ module.exports = (function(exports) {
 				type: "display-slide",
 				template: irbTemplate,
 				display_element: $("#irb"),
+				display_next_button: false,
+			},
+			INSTRUCTIONS: {
+				name: "instructions",
+				type: "display-slide",
+				template: instructionsTemplate,
+				display_element: $("#instructions"),
+				display_next_button: false,
+			},
+			AESTHETIC_QUESTION: {
+				name: "aesthetic",
+				type: "display-slide",
+				template: aestheticQuestion,
+				template_data:{},
+				display_element: $("#aesthetic"),
 				display_next_button: false,
 			},
 			DEMOGRAPHICS: {
@@ -81,11 +97,14 @@ module.exports = (function(exports) {
 	};
 
 	function configureStudy() {
-		timeline.push(params.slides.INTRODUCTION);
-		timeline.push(params.slides.INFORMED_CONSENT);
-		timeline.push(params.slides.DEMOGRAPHICS);
-		timeline.push(params.slides.COMMENTS);
-		timeline.push(params.slides.RESULTS);
+		// timeline.push(params.slides.INTRODUCTION);
+		// timeline.push(params.slides.INFORMED_CONSENT);
+		// timeline.push(params.slides.INSTRUCTIONS);
+		timeline.push(params.slides.INSTRUCTIONS);
+		timeline.push(params.slides.AESTHETIC_QUESTION);
+		// timeline.push(params.slides.DEMOGRAPHICS);
+		// timeline.push(params.slides.COMMENTS);
+		// timeline.push(params.slides.RESULTS);
 	}
 
 	function calculateResults() {
