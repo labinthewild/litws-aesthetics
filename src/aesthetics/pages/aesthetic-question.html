@@ -1,31 +1,63 @@
-<div id="question-box" class="instructions-stim-container">
+<div id="question-box" class="container text-center">
     <div class="row">
-        <div class="col d-flex justify-content-center">
-            <h2 id="questionID" data-question_id="q1" class="bolded-blue" data-i18n="study-base-q1-title"></h2>
+        <div id="stim-data" data-id="{{stimulus.id}}" data-size="{{stimulus.number}}"
+            {{#each  stimulus.names}}
+                data-stimulus{{@index}}="{{ this }}"
+            {{/each}}
+        ></div>
+        <div class="col justify-content-center">
+            <img id="stim-img" src="" class="img-fluid">
         </div>
     </div>
-    <div class="row">
-        <div class="d-grid gap-2 d-md-block justify-content-center align-self-center">
-            <button id="button1" data-response_id="1" type="button" class="btn btn-primary" data-bs-toggle="button"
+    <div class="row pt-4">
+        <div class="btn-group justify-content-center align-self-center" role="group">
+            <label class="p-1" data-i18n="study-base-q1-r-vu"></label>
+            <button id="button1" data-response_id="1" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
                     data-i18n="study-base-q1-r1" onclick="selection('button1')"></button>
-            <button id="button2" data-response_id="2" type="button" class="btn btn-primary" data-bs-toggle="button"
+            <button id="button2" data-response_id="2" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
                     data-i18n="study-base-q1-r2" onclick="selection('button2')"></button>
-            <button id="button3" data-response_id="3" type="button" class="btn btn-primary" data-bs-toggle="button"
+            <button id="button3" data-response_id="3" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
                     data-i18n="study-base-q1-r3" onclick="selection('button3')"></button>
-            <button id="button4" data-response_id="4" type="button" class="btn btn-primary" data-bs-toggle="button"
+            <button id="button4" data-response_id="4" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
                     data-i18n="study-base-q1-r4" onclick="selection('button4')"></button>
-            <button id="button5" data-response_id="5" type="button" class="btn btn-primary" data-bs-toggle="button"
+            <button id="button5" data-response_id="5" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
                     data-i18n="study-base-q1-r5" onclick="selection('button5')"></button>
+            <button id="button6" data-response_id="6" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
+                    data-i18n="study-base-q1-r6" onclick="selection('button6')"></button>
+            <button id="button7" data-response_id="7" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
+                    data-i18n="study-base-q1-r7" onclick="selection('button7')"></button>
+            <button id="button8" data-response_id="8" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
+                    data-i18n="study-base-q1-r8" onclick="selection('button8')"></button>
+            <button id="button9" data-response_id="9" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
+                    data-i18n="study-base-q1-r9" onclick="selection('button9')"></button>
+            <button id="button10" data-response_id="10" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
+                    data-i18n="study-base-q1-r10" onclick="selection('button10')"></button>
+            <label class="p-1" data-i18n="study-base-q1-r-va"></label>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    let selectionData = {}
+    selectionData = {}
+    stim_counter = 0;
+    stim_number = document.getElementById('stim-data').dataset.size;
+
+    let showNextStimulus = function() {
+        if(stim_counter < stim_number) {
+            let nextImage = document.getElementById('stim-data').dataset[`stimulus${stim_counter}`];
+            document.getElementById('stim-img').setAttribute('src', nextImage);
+            setTimeout(()=>{
+                document.getElementById('stim-img').style.opacity = '0';
+            }, 1000);
+        } else {
+            finishExperiment(JSON.parse(JSON.stringify(selectionData)));
+        }
+        stim_counter += 1;
+    }
 
     let selection = function(buttonID) {
         let clickedElem = document.getElementById(buttonID);
-        let questionID = document.getElementById('questionID').dataset.question_id;
+        let stimulusName = document.getElementById('stim-img').getAttribute('src');
         if(clickedElem) {
             document.querySelectorAll('button').forEach(btn => {
                 if(btn.id === clickedElem.id && !btn.classList.contains('active')) {
@@ -36,18 +68,20 @@
                 }
             })
             let responseID = clickedElem.dataset.response_id;
-            console.log(`CLICKED: ${responseID}`);
-            selectionData[questionID] = responseID;
-            LITW.utils.showNextButton(() => { saveSelection(selectionData) });
+            selectionData[stimulusName] = responseID;
+            showNextStimulus();
         } else {
             console.log(`CLICK ERROR: ID ${buttonID}`);
         }
     }
 
-    let saveSelection = function(selectionData) {
-        console.log('DATA SUBMIT', selectionData);
-        LITW.data.submitStudyData({
-            questionnaire: selectionData
-        });
+    let finishExperiment = function(selectionData) {
+        let questID = document.getElementById('stim-data').dataset.id;
+        LITW.study.params.responses[questID] = selectionData;
+        $('#btn-next-page').click();
     }
+
+    $(document).ready(function() {
+        showNextStimulus();
+    });
 </script>

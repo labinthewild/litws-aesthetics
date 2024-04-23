@@ -31,7 +31,8 @@ module.exports = (function(exports) {
 	var timeline = [],
 	params = {
 		study_id: "TO_BE_ADDED_IF_USING_LITW_INFRA",
-		study_recommendation: [],
+		stimulus: [],
+		responses: {},
 		preLoad: ["../img/btn-next.png","../img/btn-next-active.png","../img/ajax-loader.gif"],
 		slides: {
 			INTRODUCTION: {
@@ -100,7 +101,15 @@ module.exports = (function(exports) {
 		// timeline.push(params.slides.INTRODUCTION);
 		// timeline.push(params.slides.INFORMED_CONSENT);
 		// timeline.push(params.slides.INSTRUCTIONS);
-		timeline.push(params.slides.INSTRUCTIONS);
+		// timeline.push(params.slides.INSTRUCTIONS);
+		let stimulus_list = ['./img/instruction_example.png'];
+		params.slides.AESTHETIC_QUESTION.template_data = {
+			stimulus: {
+				id: 'test',
+				number: 1,
+				names: stimulus_list
+			}
+		}
 		timeline.push(params.slides.AESTHETIC_QUESTION);
 		// timeline.push(params.slides.DEMOGRAPHICS);
 		// timeline.push(params.slides.COMMENTS);
