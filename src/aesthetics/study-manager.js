@@ -10,10 +10,16 @@
  *************************************************************/
 
 // load webpack modules
-window.$ = window.jQuery = require("jquery");
-window.bootstrap = require("bootstrap");
+window.$ = require("jquery");
+window.jQuery = window.$;
+require("../js/jquery.i18n");
+require("../js/jquery.i18n.messagestore");
 require("jquery-ui-bundle");
-var _ = require('lodash');
+require("handlebars");
+window.$.alpaca = require("alpaca");
+window.bootstrap = require("bootstrap");
+window._ = require("lodash");
+
 var introTemplate = require("./pages/introduction.html");
 var irbTemplate = require("../templates/irb.html");
 var demographicsTemplate = require("../templates/demographics.html");
@@ -31,6 +37,7 @@ module.exports = (function(exports) {
 	var timeline = [],
 	params = {
 		study_id: "TO_BE_ADDED_IF_USING_LITW_INFRA",
+		stimulus_practice: generatePracticeStimuli(),
 		stimulus: [],
 		responses: {},
 		preLoad: ["../img/btn-next.png","../img/btn-next-active.png","../img/ajax-loader.gif"],
@@ -97,17 +104,24 @@ module.exports = (function(exports) {
 		}
 	};
 
+	function generatePracticeStimuli(){
+		let practiceIndexes = Array(5).fill().map((_, i) => i+1);
+		practiceIndexes.forEach(
+			(value, index, array)=>{array[index] = `./img/stimuli/practice-${value}.jpg`}
+		)
+		return practiceIndexes;
+	}
+
 	function configureStudy() {
 		// timeline.push(params.slides.INTRODUCTION);
 		// timeline.push(params.slides.INFORMED_CONSENT);
-		// timeline.push(params.slides.INSTRUCTIONS);
-		// timeline.push(params.slides.INSTRUCTIONS);
+		timeline.push(params.slides.INSTRUCTIONS);
 		let stimulus_list = ['./img/instruction_example.png'];
 		params.slides.AESTHETIC_QUESTION.template_data = {
 			stimulus: {
-				id: 'test',
-				number: 1,
-				names: stimulus_list
+				phase_id: 'practice',
+				number: params.stimulus_practice.length,
+				names: params.stimulus_practice
 			}
 		}
 		timeline.push(params.slides.AESTHETIC_QUESTION);
@@ -200,7 +214,7 @@ module.exports = (function(exports) {
 
 				LITW.utils.showSlide("img-loading");
 				//start the study when resources are preloaded
-				jsPsych.pluginAPI.preloadImages(params.preLoad,
+				jsPsych.pluginAPI.preloadImages(params.preLoad.concat(params.stimulus_practice),
 					function () {
 						configureStudy();
 						startStudy();

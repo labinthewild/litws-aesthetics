@@ -1,6 +1,11 @@
 <div id="question-box" class="container text-center">
     <div class="row">
-        <div id="stim-data" data-id="{{stimulus.id}}" data-size="{{stimulus.number}}"
+        <h2 class="bolded-blue">
+            <span data-i18n="study-instructions-phase-practice-title"></span>
+            <span id="stimulus-count"></span>
+            <span>/ {{ stimulus.number }}</span>
+        </h2>
+        <div id="stim-data" data-id="{{stimulus.phase_id}}" data-size="{{stimulus.number}}"
             {{#each  stimulus.names}}
                 data-stimulus{{@index}}="{{ this }}"
             {{/each}}
@@ -9,8 +14,8 @@
             <img id="stim-img" src="" class="img-fluid">
         </div>
     </div>
-    <div class="row pt-4">
-        <div class="btn-group justify-content-center align-self-center" role="group">
+    <div id="response-buttons" class="row pt-4 position-relative">
+        <div class="btn-group position-absolute bottom-0 end-0" role="group">
             <label class="p-1" data-i18n="study-base-q1-r-vu"></label>
             <button id="button1" data-response_id="1" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
                     data-i18n="study-base-q1-r1" onclick="selection('button1')"></button>
@@ -43,11 +48,15 @@
     stim_number = document.getElementById('stim-data').dataset.size;
 
     let showNextStimulus = function() {
+        document.getElementById('response-buttons').classList.add('d-none');
         if(stim_counter < stim_number) {
+            document.getElementById('stimulus-count').textContent = stim_counter+1;
+            document.getElementById('stim-img').style.opacity = '100';
             let nextImage = document.getElementById('stim-data').dataset[`stimulus${stim_counter}`];
             document.getElementById('stim-img').setAttribute('src', nextImage);
             setTimeout(()=>{
                 document.getElementById('stim-img').style.opacity = '0';
+                document.getElementById('response-buttons').classList.remove('d-none');
             }, 1000);
         } else {
             finishExperiment(JSON.parse(JSON.stringify(selectionData)));
@@ -60,15 +69,13 @@
         let stimulusName = document.getElementById('stim-img').getAttribute('src');
         if(clickedElem) {
             document.querySelectorAll('button').forEach(btn => {
-                if(btn.id === clickedElem.id && !btn.classList.contains('active')) {
-                    bootstrap.Button.getInstance(btn).toggle();
-                }
-                if(btn.id !== clickedElem.id && btn.classList.contains('active')) {
+                if(btn.id === clickedElem.id && btn.classList.contains('active')) {
                     bootstrap.Button.getInstance(btn).toggle();
                 }
             })
             let responseID = clickedElem.dataset.response_id;
-            selectionData[stimulusName] = responseID;
+            let filename = stimulusName.split('/').pop().split('.')[0]
+            selectionData[filename] = responseID;
             showNextStimulus();
         } else {
             console.log(`CLICK ERROR: ID ${buttonID}`);
