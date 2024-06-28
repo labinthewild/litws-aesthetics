@@ -1,9 +1,12 @@
 <div id="question-box" class="container text-center">
     <div class="row">
         <h2 class="bolded-blue">
-            <span data-i18n="study-instructions-phase-practice-title"></span>
+            <span> {{ stimulus.round_name }} </span>
+            <span>(</span>
             <span id="stimulus-count"></span>
-            <span>/ {{ stimulus.number }}</span>
+            <span>/</span>
+            <span> {{ stimulus.number }} </span>
+            <span>)</span>
         </h2>
         <div id="stim-data" data-id="{{stimulus.phase_id}}" data-size="{{stimulus.number}}"
             {{#each  stimulus.names}}
@@ -47,7 +50,7 @@
     stim_counter = 0;
     stim_number = document.getElementById('stim-data').dataset.size;
 
-    let showNextStimulus = function() {
+    showNextStimulus = function() {
         document.getElementById('response-buttons').classList.add('d-none');
         if(stim_counter < stim_number) {
             document.getElementById('stimulus-count').textContent = stim_counter+1;
@@ -64,7 +67,7 @@
         stim_counter += 1;
     }
 
-    let selection = function(buttonID) {
+    selection = function(buttonID) {
         let clickedElem = document.getElementById(buttonID);
         let stimulusName = document.getElementById('stim-img').getAttribute('src');
         if(clickedElem) {
@@ -82,7 +85,7 @@
         }
     }
 
-    let finishExperiment = function(selectionData) {
+    finishExperiment = function(selectionData) {
         let questID = document.getElementById('stim-data').dataset.id;
         LITW.study.params.responses[questID] = selectionData;
         $('#btn-next-page').click();

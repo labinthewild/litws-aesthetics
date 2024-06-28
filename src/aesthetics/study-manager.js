@@ -24,7 +24,9 @@ var introTemplate = require("./pages/introduction.html");
 var irbTemplate = require("../templates/irb.html");
 var demographicsTemplate = require("../templates/demographics.html");
 var instructionsTemplate = require("./pages/instructions.html");
-var aestheticQuestion = require("./pages/aesthetic-question.html")
+var instructionsR1Template = require("./pages/instructions-round1.html");
+var aestheticQuestionPractice = require("./pages/aesthetic-question.html")
+var aestheticQuestionR1 = require("./pages/aesthetic-question.html")
 var loadingTemplate = require("../templates/loading.html");
 var resultsTemplate = require("../templates/results.html");
 var resultsFooter = require("../templates/results-footer.html");
@@ -37,10 +39,15 @@ module.exports = (function(exports) {
 	var timeline = [],
 	params = {
 		study_id: "TO_BE_ADDED_IF_USING_LITW_INFRA",
-		stimulus_practice: generatePracticeStimuli(),
-		stimulus: [],
+		all_stimulus: {
+			HH: ["HCL_HCM_4f8509dc.jpg", "HCL_HCM_4fb6fabe.jpg", "HCL_HCM_4fba15b4.jpg", "HCL_HCM_53fd3840.jpg", "HCL_HCM_532022ac.jpg]"],
+			HL: ["HCL_LCM_4ec913ee.jpg", "HCL_LCM_4f694e40.jpg", "HCL_LCM_4ff24812.jpg", "HCL_LCM_533d953a.jpg", "HCL_LCM_53404dc0.jpg"],
+			LH: ["LCL_HCM_4eb64b10.jpg", "LCL_HCM_4ff2038e.jpg", "LCL_HCM_53d810ce.jpg", "LCL_HCM_53001fb6.jpg", "LCL_HCM_53900b76.jpg"],
+			LL: ["LCL_LCM_4ec84fae.jpg", "LCL_LCM_4fc40b8c.jpg", "LCL_LCM_53dfb4e6.jpg", "LCL_LCM_54058e00.jpg", "LCL_LCM_58872dc6.jpg"]
+		},
+		stimulus_practice: [],
+		stimulus_rounds: [],
 		responses: {},
-		preLoad: ["../img/btn-next.png","../img/btn-next-active.png","../img/ajax-loader.gif"],
 		slides: {
 			INTRODUCTION: {
 				name: "introduction",
@@ -63,10 +70,25 @@ module.exports = (function(exports) {
 				display_element: $("#instructions"),
 				display_next_button: false,
 			},
-			AESTHETIC_QUESTION: {
-				name: "aesthetic",
+			INSTRUCTIONS_R1: {
+				name: "instructions_r1",
 				type: "display-slide",
-				template: aestheticQuestion,
+				template: instructionsR1Template,
+				display_element: $("#instructions"),
+				display_next_button: false,
+			},
+			AESTHETIC_QUESTIONS_PRACTICE: {
+				name: "aesthetic_practice",
+				type: "display-slide",
+				template: aestheticQuestionPractice,
+				template_data:{},
+				display_element: $("#aesthetic"),
+				display_next_button: false,
+			},
+			AESTHETIC_QUESTIONS_R1: {
+				name: "aesthetic_r1",
+				type: "display-slide",
+				template: aestheticQuestionPractice,
 				template_data:{},
 				display_element: $("#aesthetic"),
 				display_next_button: false,
@@ -112,19 +134,58 @@ module.exports = (function(exports) {
 		return practiceIndexes;
 	}
 
+	function generateRoundStimuli(sizePerGroup=1) {
+		let stimuli = [];
+		for(let collection in params.all_stimulus) {
+			let shuffled = shuffleArray(params.all_stimulus[collection]);
+			stimuli.push(shuffled.splice(0, Math.min(sizePerGroup, collection.length)));
+		}
+		stimuli.forEach(
+			(value, index, array)=>{array[index] = `./img/stimuli/${value}`}
+		)
+		return stimuli;
+	}
+
+	function getPreLoad() {
+		let baseline =  ["../img/btn-next.png", "../img/btn-next-active.png", "../img/ajax-loader.gif"];
+		baseline = baseline.concat(params.stimulus_practice);
+		baseline = baseline.concat(params.stimulus_rounds);
+		return baseline;
+	}
+
+	function shuffleArray( array ) {
+		return array
+				.map(value => ({ value, sort: Math.random() }))
+		.sort((a, b) => a.sort - b.sort)
+		.map(({ value }) => value)
+	}
+
 	function configureStudy() {
+		params.stimulus_practice = generatePracticeStimuli();
+		params.stimulus_rounds = generateRoundStimuli();
+
 		// timeline.push(params.slides.INTRODUCTION);
 		// timeline.push(params.slides.INFORMED_CONSENT);
 		timeline.push(params.slides.INSTRUCTIONS);
-		let stimulus_list = ['./img/instruction_example.png'];
-		params.slides.AESTHETIC_QUESTION.template_data = {
+		params.slides.AESTHETIC_QUESTIONS_PRACTICE.template_data = {
 			stimulus: {
+				round_name: $.i18n('study-instructions-phase-practice-title'),
 				phase_id: 'practice',
 				number: params.stimulus_practice.length,
 				names: params.stimulus_practice
 			}
 		}
-		timeline.push(params.slides.AESTHETIC_QUESTION);
+		timeline.push(params.slides.AESTHETIC_QUESTIONS_PRACTICE);
+		timeline.push(params.slides.INSTRUCTIONS_R1);
+		params.slides.AESTHETIC_QUESTIONS_R1.template_data = {
+			stimulus: {
+				round_name: $.i18n('study-instructions-phase-r1-title'),
+				phase_id: 'round1',
+				number: params.stimulus_rounds.length,
+				names: params.stimulus_rounds
+			}
+		}
+		timeline.push(params.slides.AESTHETIC_QUESTIONS_R1);
 		// timeline.push(params.slides.DEMOGRAPHICS);
 		// timeline.push(params.slides.COMMENTS);
 		// timeline.push(params.slides.RESULTS);
@@ -214,9 +275,10 @@ module.exports = (function(exports) {
 
 				LITW.utils.showSlide("img-loading");
 				//start the study when resources are preloaded
-				jsPsych.pluginAPI.preloadImages(params.preLoad.concat(params.stimulus_practice),
+				configureStudy();
+				let preLoadList = getPreLoad();
+				jsPsych.pluginAPI.preloadImages(preLoadList,
 					function () {
-						configureStudy();
 						startStudy();
 					},
 
@@ -225,7 +287,7 @@ module.exports = (function(exports) {
 						$("#img-loading").html(loadingTemplate({
 							msg: $.i18n("litw-template-loading"),
 							numLoaded: numLoaded,
-							total: params.preLoad.length
+							total: preLoadList.length
 						}));
 					}
 				);
