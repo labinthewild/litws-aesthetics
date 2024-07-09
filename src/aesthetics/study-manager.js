@@ -28,11 +28,15 @@ var instructionsR1Template = require("./pages/instructions-round1.html");
 var aestheticQuestionPractice = require("./pages/aesthetic-question.html")
 var aestheticQuestionR1 = require("./pages/aesthetic-question.html")
 var loadingTemplate = require("../templates/loading.html");
-var resultsTemplate = require("../templates/results.html");
+var resultsTemplate = require("./pages/results.html");
 var resultsFooter = require("../templates/results-footer.html");
 var commentsTemplate = require("../templates/comments.html");
 require("../js/litw/jspsych-display-info");
 require("../js/litw/jspsych-display-slide");
+
+import * as results_utils from "./js/results.mjs";
+window.results_utils = results_utils;
+
 
 //TODO: document "params.study_id" when updating the docs/7-ManageData!!!
 module.exports = (function(exports) {
@@ -166,7 +170,7 @@ module.exports = (function(exports) {
 
 		// timeline.push(params.slides.INTRODUCTION);
 		// timeline.push(params.slides.INFORMED_CONSENT);
-		timeline.push(params.slides.INSTRUCTIONS);
+		// timeline.push(params.slides.INSTRUCTIONS);
 		params.slides.AESTHETIC_QUESTIONS_PRACTICE.template_data = {
 			stimulus: {
 				round_name: $.i18n('study-instructions-phase-practice-title'),
@@ -175,8 +179,8 @@ module.exports = (function(exports) {
 				names: params.stimulus_practice
 			}
 		}
-		timeline.push(params.slides.AESTHETIC_QUESTIONS_PRACTICE);
-		timeline.push(params.slides.INSTRUCTIONS_R1);
+		// timeline.push(params.slides.AESTHETIC_QUESTIONS_PRACTICE);
+		// timeline.push(params.slides.INSTRUCTIONS_R1);
 		params.slides.AESTHETIC_QUESTIONS_R1.template_data = {
 			stimulus: {
 				round_name: $.i18n('study-instructions-phase-r1-title'),
@@ -185,10 +189,10 @@ module.exports = (function(exports) {
 				names: params.stimulus_rounds
 			}
 		}
-		timeline.push(params.slides.AESTHETIC_QUESTIONS_R1);
+		// timeline.push(params.slides.AESTHETIC_QUESTIONS_R1);
 		// timeline.push(params.slides.DEMOGRAPHICS);
 		// timeline.push(params.slides.COMMENTS);
-		// timeline.push(params.slides.RESULTS);
+		timeline.push(params.slides.RESULTS);
 	}
 
 	function calculateResults() {
@@ -200,13 +204,17 @@ module.exports = (function(exports) {
 				round2:{HCL_HCM_4fb6fabe:"7",HCL_LCM_4f694e40:"6",LCL_HCM_53001fb6:"8",LCL_LCM_4fc40b8c:"9"}
 			}
 		}
-		all_responses = Object.assign({}, results_data.round1, results_data.round2);
-		scores = {};
-		for (key of Object.keys(all_responses)){
-    		img_key = key.split('_')[2];
-    		scores[img_key] = parseInt(all_responses[key])
+		let all_responses = Object.assign({}, results_data.round1, results_data.round2);
+		let img_ratings = {};
+		for (let key of Object.keys(all_responses)){
+    		let img_key = key.split('_')[2];
+    		img_ratings[img_key] = parseInt(all_responses[key])
 		}
-		showResults(results_data, true)
+		let part_data = {
+			scores: results_utils.calculate_participant_score(img_ratings),
+		}
+		part_data.country = results_utils.findClosestCountry(part_data.scores.color, part_data.scores.complexity);
+		showResults(part_data, true)
 	}
 
 	function showResults(results = {}, showFooter = false) {

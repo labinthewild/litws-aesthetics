@@ -1,0 +1,31 @@
+<!-- Template for the results page -->
+<div id="participant_scores" data-color="{{ data.scores.color }}" 
+                      data-complexity="{{ data.scores.complexity }}">
+</div>
+<h3 class="bolded-blue" style="text-align: center">
+    <span data-i18n="study-results-header"></span>
+    <span>{{ data.country }}</span>
+</h3>
+
+<br>
+{{#if data.code}}
+<h5 style="text-align: center">
+    <span data-i18n="litw-results-code"></span>
+    <span>{{ data.code }}</span>
+</h5>
+<br>
+{{/if}}
+<br>
+
+<div class="container">
+    <div id="results_graphic"></div>
+</div>
+
+<br>
+<div id="results-footer"></div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        console.log("SCORES", document.getElementById('participant_scores').dataset);
+    });
+</script>

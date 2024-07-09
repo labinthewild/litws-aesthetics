@@ -76,15 +76,40 @@ let country_scores = {
 }
 
 /**
- * scores : dict = {img_id: score} [string: int]
+ * @attr ratings: dict = {img_id: score} [string: int]
+ * @return {'color': float, 'complexity': float}
  */
-function calculate_participant_score(scores, type) {
-    accumulator = 0;
-    for(img_id in scores) {
+function calculate_participant_score(ratings) {
+    let color_accumulator = 0;
+    let complex_accumulator = 0;
+    let scores = {'color': 0, 'complexity': 0}
+    for(let img_id in ratings) {
         if(img_id in website_scores) {
-            accumulator += website_scores[img_id][type]*scores[img_id]
+            color_accumulator += website_scores[img_id]['color']*ratings[img_id]
+            complex_accumulator += website_scores[img_id]['complexity']*ratings[img_id]
         }
     }
-    //TODO: CONFIRM THIS CALCULATION!!!
-    return accumulator / Object.keys(scores).length / 10
+    //Weighted mean of scores...
+    scores.color = color_accumulator / Object.keys(ratings).length / 10;
+    scores.color = parseFloat(scores.color.toFixed(1));
+    scores.complexity = complex_accumulator / Object.keys(ratings).length / 10;
+    scores.complexity = parseFloat(scores.complexity.toFixed(1));
+    return scores;
 }
+
+function findClosestCountry(color_score, complexity_score) {
+    let closest_country = 'Not Found :('
+    let closest_distance = 1000000;
+    for (let country in country_scores) {
+        let tmp_dist = Math.sqrt(
+            ((country_scores[country].color - color_score) ** 2)
+            + ((country_scores[country].complexity - complexity_score) ** 2));
+        if(tmp_dist < closest_distance) {
+            closest_distance = tmp_dist;
+            closest_country = country;
+        }
+    }
+    return closest_country;
+}
+
+export {calculate_participant_score, findClosestCountry};
