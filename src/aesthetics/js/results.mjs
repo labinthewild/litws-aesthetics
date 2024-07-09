@@ -1,3 +1,11 @@
+/**
+ * DATA FROM: 
+ * Katharina Reinecke and Krzysztof Z. Gajos. 
+ * Quantifying visual preferences around the world. 
+ * In Proceedings of the SIGCHI Conference on Human Factors in Computing Systems, CHI '14, 
+ * pages 11-20, New York, NY, USA, 2014. ACM.
+ */
+
 let website_scores = {
     "4f8509dc": { 'color': 4.7744057618, 'complexity': 7.0842378233 },
     "4fb6fabe": { 'color': 6.0793321804, 'complexity': 6.1878661439 },
@@ -15,7 +23,7 @@ let website_scores = {
     "53900b76": { 'color': 2.0121925916, 'complexity': 5.7258703072 },
     "53d810ce": { 'color': 1.9785179454, 'complexity': 7.1774970952 },
     "4ec84fae": { 'color': 1.0933426531, 'complexity': 2.3011683415 },
-    "4fc40b8c": { 'color': -0.137317031, 'complexity': 2.1450039608 },
+    "4fc40b8c": { 'color': 0.1, 'complexity': 2.1450039608 },
     "53dfb4e6": { 'color': 1.3218037708, 'complexity': 2.3686750393 },
     "54058e00": { 'color': 0.4472927787, 'complexity': 2.1626792795 },
     "58872dc6": { 'color': 1.2623744008, 'complexity': 2.6099256526 },
@@ -67,3 +75,16 @@ let country_scores = {
     "Finland": {"color":3.56, "complexity":3.31}
 }
 
+/**
+ * scores : dict = {img_id: score} [string: int]
+ */
+function calculate_participant_score(scores, type) {
+    accumulator = 0;
+    for(img_id in scores) {
+        if(img_id in website_scores) {
+            accumulator += website_scores[img_id][type]*scores[img_id]
+        }
+    }
+    //TODO: CONFIRM THIS CALCULATION!!!
+    return accumulator / Object.keys(scores).length / 10
+}

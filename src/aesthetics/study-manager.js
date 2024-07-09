@@ -129,7 +129,7 @@ module.exports = (function(exports) {
 	function generatePracticeStimuli(){
 		let practiceIndexes = Array(5).fill().map((_, i) => i+1);
 		practiceIndexes.forEach(
-			(value, index, array)=>{array[index] = `./img/stimuli/practice-${value}.jpg`}
+			(value, index, array)=>{array[index] = `./img/stimuli/practice${value}.jpg`}
 		)
 		return practiceIndexes;
 	}
@@ -192,8 +192,20 @@ module.exports = (function(exports) {
 	}
 
 	function calculateResults() {
-		//TODO: Nothing to calculate
-		let results_data = {}
+		let results_data = params.responses;
+		if (Object.keys(results_data).length == 0) {
+			results_data = {
+				practice:{practice1:"10",practice2:"9",practice3:"3",practice4:"4",practice5:"3"},
+				round1:{HCL_HCM_4fba15b4:"4",HCL_LCM_53404dc0:"8",LCL_HCM_4ff2038e:"8",LCL_LCM_54058e00:"9"},
+				round2:{HCL_HCM_4fb6fabe:"7",HCL_LCM_4f694e40:"6",LCL_HCM_53001fb6:"8",LCL_LCM_4fc40b8c:"9"}
+			}
+		}
+		all_responses = Object.assign({}, results_data.round1, results_data.round2);
+		scores = {};
+		for (key of Object.keys(all_responses)){
+    		img_key = key.split('_')[2];
+    		scores[img_key] = parseInt(all_responses[key])
+		}
 		showResults(results_data, true)
 	}
 
