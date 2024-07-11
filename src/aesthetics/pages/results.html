@@ -25,7 +25,14 @@
 <div id="results-footer"></div>
 
 <script type="text/javascript">
+    // TODO: Add this import on the study-manager script!
+    // import * as results_graphic from "./js/results-graph.mjs";
+    // window.results_graphic = results_graphic;
+    // ALSO: add d3.js to your index.html
+
     $(document).ready(function() {
         console.log("SCORES", document.getElementById('participant_scores').dataset);
+        results_graphic.init("results_graphic");
+        results_graphic.drawGraphic();
     });
 </script>

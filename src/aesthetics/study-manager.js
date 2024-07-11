@@ -36,7 +36,8 @@ require("../js/litw/jspsych-display-slide");
 
 import * as results_utils from "./js/results.mjs";
 window.results_utils = results_utils;
-
+import * as results_graphic from "./js/results-graph.mjs";
+window.results_graphic = results_graphic;
 
 //TODO: document "params.study_id" when updating the docs/7-ManageData!!!
 module.exports = (function(exports) {
