@@ -11,11 +11,13 @@ let canvas = {
   margin: {
     top: 30,
     bottom: 30,
-    left: 30,
-    right: 30,
+    left: 40,
+    right: 40,
   }
 }
 let svg = null;
+let x_axis = null;
+let y_axis = null;
 const colors1 = ['rgb(0,80,27)', 'rgb(204,236,230)'];
 const colors2 = ['rgb(253,212,158)', 'rgb(239,101,72)'];
 
@@ -31,62 +33,70 @@ let init = (div_name) => {
     .attr("height", canvas.size.height);
 }
 
+// scores = array of {color:[0,10], complexity:[0.10], label: "string"}
+const drawMarks = function (scores, color = "black") {
+  if (svg) {
+    svg.append("g")
+      .attr("stroke", color)
+      .attr("stroke-width", 1.5)
+      .attr("fill", "none")
+    .selectAll("circle")
+    .data(scores)
+    .join("circle")
+      .attr("cx", d => x_axis(d.color))
+      .attr("cy", d => y_axis(d.complexity))
+      .attr("r", 3);
 
-const _calculateMarkX = function (score) {
-  if (score > MAX_SCORE - offset) {
-    return (width / MAX_SCORE) * score - offset;
+  // Add a layer of labels.
+  svg.append("g")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 10)
+    .selectAll("text")
+    .data(scores)
+    .join("text")
+      .attr("dy", "0.35em")
+      .attr("x", d => x_axis(d.x) + 7)
+      .attr("y", d => y_axis(d.y))
+      .text(d => d.label);
   }
-  return (width / MAX_SCORE) * score;
-  };
-
-  const _addMark = function (context) {
-  context.moveTo(barHeight / 2, barHeight);
-  context.lineTo(0, 0);
-  context.lineTo(barHeight, 0);
-  context.closePath();
-  return context;
-};
-
-const drawMark = function (score, legend, fill = false) {
-  const mark = svg.append("g");
-  const fill_color = fill ? "black" : "none";
-  mark.append("path")
-    .style("stroke", "black")
-    .style("fill", fill_color)
-    .attr('d', _addMark(d3.path()));
-
-  mark.append("text")
-    .attr('x', barHeight / 2)
-    .attr('y', -5)
-    .attr('text-anchor', 'middle')
-    .attr('font-size', '1.5em')
-    .text(legend);
-
-  mark.attr('transform', `translate(${_calculateMarkX(score)}, ${height / 2 - (3 / 2 * barHeight)})`);
 };
 
 const drawGraphic = function () {
   if (svg) {
     svg.append("g")
     .attr("transform", "translate(" + canvas.margin.left + "," + canvas.margin.top + ")");
-    var x_axis = d3.scaleLinear()
-    .domain([0, 100])
+    x_axis = d3.scaleLinear()
+    .domain([0, 10])
     .range([0, canvas.size.width-canvas.margin.left-canvas.margin.right]);
     svg.append('g')
     .attr("transform", `translate(${canvas.margin.left},${canvas.size.height - canvas.margin.bottom})`)
-    .call(d3.axisBottom(x_axis));
+    .call(d3.axisBottom(x_axis))
+    .append("text")
+        .attr("x", canvas.size.width/2)
+        .attr("y", canvas.margin.bottom)
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .text("Colorfulness");
 
-    var y_axis = d3.scaleLinear()
-    .domain([0, 100])
+    y_axis = d3.scaleLinear()
+    .domain([0, 10])
     .range([canvas.size.height-canvas.margin.top-canvas.margin.bottom, 0]);
+
+    let y_label_x = -canvas.margin.left/2;
+    let y_label_y = canvas.size.height/2;
     svg.append('g')
     .attr("transform", `translate( ${canvas.margin.left}, ${canvas.margin.bottom})`)
-    .call(d3.axisLeft(y_axis));
-
-
+    .call(d3.axisLeft(y_axis))
+    .append("text")
+        .attr("x", y_label_x)
+        .attr("y", y_label_y)
+        .attr("transform", `rotate(-90, ${y_label_x}, ${y_label_y})`)
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .text("Complexity");
   } else {
     console.error('Graphic was not initialized. Try init() first!');
   }
 };
 
-export{ init, drawGraphic, drawMark }
+export{ init, drawGraphic, drawMarks }

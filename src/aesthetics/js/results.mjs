@@ -112,4 +112,4 @@ function findClosestCountry(color_score, complexity_score) {
     return closest_country;
 }
 
-export {calculate_participant_score, findClosestCountry};
+export {calculate_participant_score, findClosestCountry, country_scores};

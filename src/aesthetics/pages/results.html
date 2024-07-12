@@ -28,11 +28,24 @@
     // TODO: Add this import on the study-manager script!
     // import * as results_graphic from "./js/results-graph.mjs";
     // window.results_graphic = results_graphic;
+    // import * as results_utils from "./js/results.mjs";
+    // window.results_utils = results_utils;
     // ALSO: add d3.js to your index.html
 
     $(document).ready(function() {
         console.log("SCORES", document.getElementById('participant_scores').dataset);
         results_graphic.init("results_graphic");
         results_graphic.drawGraphic();
+        let countries = [];
+        for (country in results_utils.country_scores) {
+            let data_point = {
+                color: results_utils.country_scores[country].color,
+                complexity: results_utils.country_scores[country].complexity,
+                label: country
+            }
+            countries.push(data_point);
+        }
+        console.log("DATA POINTS", countries);
+        results_graphic.drawMarks(countries);
     });
 </script>
