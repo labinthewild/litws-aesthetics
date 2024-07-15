@@ -22,11 +22,10 @@ const colors1 = ['rgb(0,80,27)', 'rgb(204,236,230)'];
 const colors2 = ['rgb(253,212,158)', 'rgb(239,101,72)'];
 
 
-let init = (div_name) => {
-  let base_measure = document.getElementById(div_name).clientWidth;
+let init = (div_name, canvas_width=null, canvas_height=null) => {
   //TODO: better calculate margin
-  canvas.size.width = base_measure;
-  canvas.size.height = base_measure;
+  canvas.size.width = canvas_width || document.getElementById(div_name).clientWidth;
+  canvas.size.height = canvas_height || window.innerHeight;
   svg = d3.select(`#${div_name}`)
     .append("svg")
     .attr("width", canvas.size.width)
@@ -34,7 +33,7 @@ let init = (div_name) => {
 }
 
 // scores = array of {color:[0,10], complexity:[0.10], label: "string"}
-const drawMarks = function (scores, color = "black") {
+const drawMarks = function (scores, color = "black", font_size = '1.2em') {
   if (svg) {
     svg.append("g")
       .attr("stroke", color)
@@ -50,13 +49,13 @@ const drawMarks = function (scores, color = "black") {
   // Add a layer of labels.
   svg.append("g")
       .attr("font-family", "sans-serif")
-      .attr("font-size", 10)
+      .attr("font-size", font_size)
     .selectAll("text")
     .data(scores)
     .join("text")
       .attr("dy", "0.35em")
-      .attr("x", d => x_axis(d.x) + 7)
-      .attr("y", d => y_axis(d.y))
+      .attr("x", d => x_axis(d.color) + 7)
+      .attr("y", d => y_axis(d.complexity))
       .text(d => d.label);
   }
 };
@@ -74,6 +73,7 @@ const drawGraphic = function () {
     .append("text")
         .attr("x", canvas.size.width/2)
         .attr("y", canvas.margin.bottom)
+        .attr("font-size", '1.6em')
         .attr("fill", "black")
         .attr("text-anchor", "middle")
         .text("Colorfulness");
@@ -90,6 +90,7 @@ const drawGraphic = function () {
     .append("text")
         .attr("x", y_label_x)
         .attr("y", y_label_y)
+        .attr("font-size", '1.6em')
         .attr("transform", `rotate(-90, ${y_label_x}, ${y_label_y})`)
         .attr("fill", "black")
         .attr("text-anchor", "middle")

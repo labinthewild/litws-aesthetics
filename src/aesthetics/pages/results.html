@@ -33,9 +33,17 @@
     // ALSO: add d3.js to your index.html
 
     $(document).ready(function() {
-        console.log("SCORES", document.getElementById('participant_scores').dataset);
+        let your_scores = document.getElementById('participant_scores').dataset;
+        let your_result = {
+            color: your_scores.color,
+            complexity: your_scores.complexity,
+            label: 'YOU'
+        }
+        console.log("SCORES", your_result);
         results_graphic.init("results_graphic");
         results_graphic.drawGraphic();
+        results_graphic.drawMarks([your_result], 'red', "1.6em");
+
         let countries = [];
         for (country in results_utils.country_scores) {
             let data_point = {
