@@ -33,18 +33,20 @@ let init = (div_name, canvas_width=null, canvas_height=null) => {
 }
 
 // scores = array of {color:[0,10], complexity:[0.10], label: "string"}
-const drawMarks = function (scores, color = "black", font_size = '1.2em') {
+const drawMarks = function (scores, color = "black", font_size = '1.2em', show_labels = true) {
   if (svg) {
     svg.append("g")
       .attr("stroke", color)
       .attr("stroke-width", 1.5)
-      .attr("fill", "none")
+      .attr("fill", color)
+      .attr("fill-opacity", 0.1)
     .selectAll("circle")
     .data(scores)
     .join("circle")
+      .attr("name", d => get_mark_name(d.label))
       .attr("cx", d => x_axis(d.color))
       .attr("cy", d => y_axis(d.complexity))
-      .attr("r", 3);
+      .attr("r", 10);
 
   // Add a layer of labels.
   svg.append("g")
@@ -53,12 +55,46 @@ const drawMarks = function (scores, color = "black", font_size = '1.2em') {
     .selectAll("text")
     .data(scores)
     .join("text")
-      .attr("dy", "0.35em")
-      .attr("x", d => x_axis(d.color) + 7)
-      .attr("y", d => y_axis(d.complexity))
+      .attr("style", "visibility:" + (show_labels ? "visible" : "hidden") )
+      .attr("name", d => get_mark_name(d.label))
+      .attr("text-anchor", "middle")
+      .attr("dy", "1.4em")
+      .attr("x", d => x_axis(show_labels ? d.color : 7))
+      .attr("y", d => y_axis(show_labels ? d.complexity : 3))
       .text(d => d.label);
   }
+
+  if(!show_labels) {
+    for (let entry of scores) {
+      let mark_name = get_mark_name(entry.label);
+      let mark_circle_elem = document.querySelectorAll(`circle[name="${mark_name}"]`);
+      let mark_text_elem = document.querySelectorAll(`text[name="${mark_name}"]`);
+      if (mark_text_elem.length == 1 && mark_circle_elem.length == 1) {
+        mark_circle_elem[0].addEventListener('click', () => {
+          toggle_mark_visibility(mark_text_elem[0]);
+        })
+        mark_circle_elem[0].addEventListener('mouseover', () => {
+          mark_text_elem[0].style.visibility = 'visible'
+        })
+        mark_circle_elem[0].addEventListener('mouseout', () => {
+          mark_text_elem[0].style.visibility = 'hidden'
+        })
+      }
+    }
+  }
+
 };
+
+
+const get_mark_name = (identifier) => {
+  return `mark_${identifier}`;
+}
+
+
+const toggle_mark_visibility = (mark_elem) => {
+  mark_elem.style.visibility = (mark_elem.style.visibility === 'visible') ? 'hidden' : 'visible'
+}
+
 
 const drawGraphic = function () {
   if (svg) {

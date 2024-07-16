@@ -43,7 +43,7 @@ window.results_graphic = results_graphic;
 module.exports = (function(exports) {
 	var timeline = [],
 	params = {
-		study_id: "TO_BE_ADDED_IF_USING_LITW_INFRA",
+		study_id: 'd3f0cbb6-a5b7-4944-a761-b862b8b93fb9',
 		all_stimulus: {
 			HH: ["HCL_HCM_4f8509dc.jpg", "HCL_HCM_4fb6fabe.jpg", "HCL_HCM_4fba15b4.jpg", "HCL_HCM_53fd3840.jpg", "HCL_HCM_532022ac.jpg]"],
 			HL: ["HCL_LCM_4ec913ee.jpg", "HCL_LCM_4f694e40.jpg", "HCL_LCM_4ff24812.jpg", "HCL_LCM_533d953a.jpg", "HCL_LCM_53404dc0.jpg"],
@@ -171,7 +171,7 @@ module.exports = (function(exports) {
 
 		// timeline.push(params.slides.INTRODUCTION);
 		// timeline.push(params.slides.INFORMED_CONSENT);
-		// timeline.push(params.slides.INSTRUCTIONS);
+		timeline.push(params.slides.INSTRUCTIONS);
 		params.slides.AESTHETIC_QUESTIONS_PRACTICE.template_data = {
 			stimulus: {
 				round_name: $.i18n('study-instructions-phase-practice-title'),
@@ -180,8 +180,8 @@ module.exports = (function(exports) {
 				names: params.stimulus_practice
 			}
 		}
-		// timeline.push(params.slides.AESTHETIC_QUESTIONS_PRACTICE);
-		// timeline.push(params.slides.INSTRUCTIONS_R1);
+		timeline.push(params.slides.AESTHETIC_QUESTIONS_PRACTICE);
+		timeline.push(params.slides.INSTRUCTIONS_R1);
 		params.slides.AESTHETIC_QUESTIONS_R1.template_data = {
 			stimulus: {
 				round_name: $.i18n('study-instructions-phase-r1-title'),
@@ -190,7 +190,7 @@ module.exports = (function(exports) {
 				names: params.stimulus_rounds
 			}
 		}
-		// timeline.push(params.slides.AESTHETIC_QUESTIONS_R1);
+		timeline.push(params.slides.AESTHETIC_QUESTIONS_R1);
 		// timeline.push(params.slides.DEMOGRAPHICS);
 		// timeline.push(params.slides.COMMENTS);
 		timeline.push(params.slides.RESULTS);

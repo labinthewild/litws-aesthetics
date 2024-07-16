@@ -1,6 +1,7 @@
 <!-- Template for the results page -->
 <div id="participant_scores" data-color="{{ data.scores.color }}" 
-                      data-complexity="{{ data.scores.complexity }}">
+                      data-complexity="{{ data.scores.complexity }}"
+                      data-closest_country="{{ data.country }}">
 </div>
 <h3 class="bolded-blue" style="text-align: center">
     <span data-i18n="study-results-header"></span>
@@ -34,15 +35,11 @@
 
     $(document).ready(function() {
         let your_scores = document.getElementById('participant_scores').dataset;
-        let your_result = {
+        let your_result = [{
             color: your_scores.color,
             complexity: your_scores.complexity,
             label: 'YOU'
-        }
-        console.log("SCORES", your_result);
-        results_graphic.init("results_graphic");
-        results_graphic.drawGraphic();
-        results_graphic.drawMarks([your_result], 'red', "1.6em");
+        }]
 
         let countries = [];
         for (country in results_utils.country_scores) {
@@ -51,9 +48,16 @@
                 complexity: results_utils.country_scores[country].complexity,
                 label: country
             }
-            countries.push(data_point);
+            if(country === your_scores.closest_country) {
+                your_result.push(data_point)
+            } else {
+                countries.push(data_point);                
+            }
         }
-        console.log("DATA POINTS", countries);
-        results_graphic.drawMarks(countries);
+
+        results_graphic.init("results_graphic");
+        results_graphic.drawGraphic();
+        results_graphic.drawMarks(your_result, 'red', '1.6em', showLabels=true);
+        results_graphic.drawMarks(countries, 'black', '1.4em', showLabels=false);
     });
 </script>
