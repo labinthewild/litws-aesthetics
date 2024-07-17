@@ -14,7 +14,7 @@
             {{/each}}
         ></div>
         <div class="col justify-content-center">
-            <img id="stim-img" src="" class="img-fluid">
+            <img id="stim-img" src="" class="img-fluid" onload="showImage()">
         </div>
     </div>
     <div id="response-buttons" class="row pt-4 position-relative">
@@ -53,17 +53,27 @@
         if(stim_counter < stim_number) {
             document.getElementById('stimulus-count').textContent = stim_counter+1;
             let nextImage = document.getElementById('stim-data').dataset[`stimulus${stim_counter}`];
-            document.getElementById('stim-img').setAttribute('src', nextImage);
-            document.getElementById('stim-img').style.opacity = '100';
-            setTimeout(()=>{
-                document.getElementById('stim-img').setAttribute('src', "");
-                document.getElementById('stim-img').style.opacity = '0';
-                document.getElementById('response-buttons').classList.remove('d-none');
-            }, 500);
+            let imgElem = document.getElementById('stim-img');
+            let btnElem = document.getElementById('response-buttons');
+            loadImage(nextImage, imgElem).then(() => {
+                imgElem.style.opacity = '100';
+                setTimeout(() => {
+                    imgElem.style.opacity = '0';
+                    btnElem.classList.remove('d-none');
+                }, 500);                
+            });
         } else {
             finishExperiment(JSON.parse(JSON.stringify(selectionData)));
         }
         stim_counter += 1;
+    }
+
+    async function loadImage(url, elem) {
+      return new Promise((resolve, reject) => {
+        elem.onload = () => resolve(elem);
+        elem.onerror = reject;
+        elem.src = url;
+      });
     }
 
     selection = function(buttonID) {
