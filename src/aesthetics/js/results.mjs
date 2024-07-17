@@ -80,20 +80,25 @@ let country_scores = {
  * @return {'color': float, 'complexity': float}
  */
 function calculate_participant_score(ratings) {
-    let color_accumulator = 0;
-    let complex_accumulator = 0;
-    let scores = {'color': 0, 'complexity': 0}
+    let color_vote_weight = Array(10).fill(0); //ignoring position 0 as no such vote exists
+    let complex_vote_weight = Array(10).fill(0);
     for(let img_id in ratings) {
         if(img_id in website_scores) {
-            color_accumulator += website_scores[img_id]['color']*ratings[img_id]
-            complex_accumulator += website_scores[img_id]['complexity']*ratings[img_id]
+            let img_color_level = Math.round(website_scores[img_id]['color'])
+            let img_complex_level = Math.round(website_scores[img_id]['complexity'])
+            let img_rating_rescaled = ratings[img_id]-5
+            color_vote_weight[img_color_level] += img_rating_rescaled
+            complex_vote_weight[img_complex_level] += img_rating_rescaled
         }
     }
-    //Weighted mean of scores...
-    scores.color = color_accumulator / Object.keys(ratings).length / 10;
-    scores.color = parseFloat(scores.color.toFixed(1));
-    scores.complexity = complex_accumulator / Object.keys(ratings).length / 10;
-    scores.complexity = parseFloat(scores.complexity.toFixed(1));
+    console.log('color voting', color_vote_weight)
+    console.log('complex voting', complex_vote_weight)
+    let pick_vote = (acc, val, idx) => acc[0]>val ? acc : [val,idx]
+    let scores = {
+        'color': color_vote_weight.reduce(pick_vote, [-100,0])[1],
+        'complexity': complex_vote_weight.reduce(pick_vote, [-100,0])[1]
+    }
+
     return scores;
 }
 

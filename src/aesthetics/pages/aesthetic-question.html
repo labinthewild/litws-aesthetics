@@ -38,8 +38,6 @@
                     data-i18n="study-base-q1-r8" onclick="selection('button8')"></button>
             <button id="button9" data-response_id="9" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
                     data-i18n="study-base-q1-r9" onclick="selection('button9')"></button>
-            <button id="button10" data-response_id="10" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
-                    data-i18n="study-base-q1-r10" onclick="selection('button10')"></button>
             <label class="p-1" data-i18n="study-base-q1-r-va"></label>
         </div>
     </div>
@@ -54,13 +52,13 @@
         document.getElementById('response-buttons').classList.add('d-none');
         if(stim_counter < stim_number) {
             document.getElementById('stimulus-count').textContent = stim_counter+1;
-            document.getElementById('stim-img').style.opacity = '100';
             let nextImage = document.getElementById('stim-data').dataset[`stimulus${stim_counter}`];
             document.getElementById('stim-img').setAttribute('src', nextImage);
+            document.getElementById('stim-img').style.opacity = '100';
             setTimeout(()=>{
                 document.getElementById('stim-img').style.opacity = '0';
                 document.getElementById('response-buttons').classList.remove('d-none');
-            }, 1000);
+            }, 500);
         } else {
             finishExperiment(JSON.parse(JSON.stringify(selectionData)));
         }

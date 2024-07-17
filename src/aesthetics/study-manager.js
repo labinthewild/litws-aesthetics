@@ -45,7 +45,7 @@ module.exports = (function(exports) {
 	params = {
 		study_id: 'd3f0cbb6-a5b7-4944-a761-b862b8b93fb9',
 		all_stimulus: {
-			HH: ["HCL_HCM_4f8509dc.jpg", "HCL_HCM_4fb6fabe.jpg", "HCL_HCM_4fba15b4.jpg", "HCL_HCM_53fd3840.jpg", "HCL_HCM_532022ac.jpg]"],
+			HH: ["HCL_HCM_4f8509dc.jpg", "HCL_HCM_4fb6fabe.jpg", "HCL_HCM_4fba15b4.jpg", "HCL_HCM_53fd3840.jpg", "HCL_HCM_532022ac.jpg"],
 			HL: ["HCL_LCM_4ec913ee.jpg", "HCL_LCM_4f694e40.jpg", "HCL_LCM_4ff24812.jpg", "HCL_LCM_533d953a.jpg", "HCL_LCM_53404dc0.jpg"],
 			LH: ["LCL_HCM_4eb64b10.jpg", "LCL_HCM_4ff2038e.jpg", "LCL_HCM_53d810ce.jpg", "LCL_HCM_53001fb6.jpg", "LCL_HCM_53900b76.jpg"],
 			LL: ["LCL_LCM_4ec84fae.jpg", "LCL_LCM_4fc40b8c.jpg", "LCL_LCM_53dfb4e6.jpg", "LCL_LCM_54058e00.jpg", "LCL_LCM_58872dc6.jpg"]
