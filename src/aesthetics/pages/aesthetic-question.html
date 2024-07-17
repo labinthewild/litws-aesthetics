@@ -56,6 +56,7 @@
             document.getElementById('stim-img').setAttribute('src', nextImage);
             document.getElementById('stim-img').style.opacity = '100';
             setTimeout(()=>{
+                document.getElementById('stim-img').setAttribute('src', "");
                 document.getElementById('stim-img').style.opacity = '0';
                 document.getElementById('response-buttons').classList.remove('d-none');
             }, 500);
