@@ -97,6 +97,12 @@ module.exports = (function(exports) {
 				template_data:{},
 				display_element: $("#aesthetic"),
 				display_next_button: false,
+				finish: function(){
+					var stimulus_data = {
+						responses: JSON.parse(JSON.stringify(params.responses))
+					}
+					LITW.data.submitStudyData(stimulus_data);
+				}
 			},
 			DEMOGRAPHICS: {
 				type: "display-slide",
@@ -139,11 +145,13 @@ module.exports = (function(exports) {
 		return practiceIndexes;
 	}
 
-	function generateRoundStimuli(sizePerGroup=1) {
+	function generateRoundStimuli(imagesPerGroup=1) {
 		let stimuli = [];
 		for(let collection in params.all_stimulus) {
 			let shuffled = shuffleArray(params.all_stimulus[collection]);
-			stimuli.push(shuffled.splice(0, Math.min(sizePerGroup, collection.length)));
+			for(let stim of shuffled.splice(0, Math.min(imagesPerGroup, collection.length))) {
+				stimuli.push(stim);
+			}
 		}
 		stimuli.forEach(
 			(value, index, array)=>{array[index] = `./img/stimuli/${value}`}
@@ -167,9 +175,9 @@ module.exports = (function(exports) {
 
 	function configureStudy() {
 		params.stimulus_practice = generatePracticeStimuli();
-		params.stimulus_rounds = generateRoundStimuli();
+		params.stimulus_rounds = generateRoundStimuli(2);
 
-		// timeline.push(params.slides.INTRODUCTION);
+		timeline.push(params.slides.INTRODUCTION);
 		// timeline.push(params.slides.INFORMED_CONSENT);
 		timeline.push(params.slides.INSTRUCTIONS);
 		params.slides.AESTHETIC_QUESTIONS_PRACTICE.template_data = {
