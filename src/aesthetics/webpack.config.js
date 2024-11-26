@@ -11,11 +11,14 @@ var config = {
   module: {
     rules: [
         {
-          test: /.*\.html$/, loader: "handlebars-loader"
+          test: /.*\.html$/,
+          loader: "html-loader",
+          options: {
+            sources: false,
+          }
         }
     ]
-  },
-  externals: [
+  },  externals: [
     {
        d3: "d3"
     }

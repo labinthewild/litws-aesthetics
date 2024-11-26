@@ -18,7 +18,7 @@
         </div>
     </div>
     <div id="response-buttons" class="row pt-4 position-relative">
-        <div class="btn-group position-absolute bottom-0 end-0" role="group">
+        <div class="btn-group position-absolute" role="group">
             <label class="p-1" data-i18n="study-base-q1-r-vu"></label>
             <button id="button1" data-response_id="1" type="button" class="btn btn-outline-primary" data-bs-toggle="button"
                     data-i18n="study-base-q1-r1" onclick="selection('button1')"></button>
@@ -56,9 +56,9 @@
             let imgElem = document.getElementById('stim-img');
             let btnElem = document.getElementById('response-buttons');
             loadImage(nextImage, imgElem).then(() => {
-                imgElem.style.opacity = '100';
+                imgElem.style.display = 'block';
                 setTimeout(() => {
-                    imgElem.style.opacity = '0';
+                    imgElem.style.display = 'none';
                     btnElem.classList.remove('d-none');
                 }, 500);                
             });
