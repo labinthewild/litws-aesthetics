@@ -38,16 +38,16 @@ import resultsHTML from "./pages/results.html";
 import resultsFooterHTML from "../templates/results-footer.html";
 import commentsHTML from "../templates/comments.html";
 
-var introTemplate = Handlebars.compile(introHTML);
-var irbTemplate = Handlebars.compile(irb_LITW_HTML);
-var demographicsTemplate = Handlebars.compile(demographicsHTML);
-var instructionsTemplate = Handlebars.compile(instructionsHTML);
-var instructionsR1Template = Handlebars.compile(instructionsR1HTML);
-var aestheticQuestionPractice = Handlebars.compile(aestheticQuestionPracticeHTML);
-var aestheticQuestionR1 = Handlebars.compile(aestheticQuestionR1HTML);
-var resultsTemplate = Handlebars.compile(resultsHTML);
-var resultsFooter = Handlebars.compile(resultsFooterHTML);
-var commentsTemplate = Handlebars.compile(commentsHTML);
+let introTemplate = Handlebars.compile(introHTML);
+let irbTemplate = Handlebars.compile(irb_LITW_HTML);
+let demographicsTemplate = Handlebars.compile(demographicsHTML);
+let instructionsTemplate = Handlebars.compile(instructionsHTML);
+let instructionsR1Template = Handlebars.compile(instructionsR1HTML);
+let aestheticQuestionPractice = Handlebars.compile(aestheticQuestionPracticeHTML);
+let aestheticQuestionR1 = Handlebars.compile(aestheticQuestionR1HTML);
+let resultsTemplate = Handlebars.compile(resultsHTML);
+let resultsFooter = Handlebars.compile(resultsFooterHTML);
+let commentsTemplate = Handlebars.compile(commentsHTML);
 
 import * as results_utils from "./js/results.mjs";
 window.results_utils = results_utils;
@@ -209,19 +209,19 @@ module.exports = (function(exports) {
 	}
 
 	function configureTimeline() {
-		// timeline.push(config.slides.INTRODUCTION);
-		// timeline.push(config.slides.INFORMED_CONSENT);
-		// timeline.push(config.slides.DEMOGRAPHICS);
-		// timeline.push(config.slides.INSTRUCTIONS);
-		// config.slides.AESTHETIC_QUESTIONS_PRACTICE.template_data = () => {
-		// 	return { stimulus: {
-		// 		round_name: $.i18n('study-instructions-phase-practice-title'),
-		// 		phase_id: 'practice',
-		// 		number: config.stimulus_practice.length,
-		// 		names: config.stimulus_practice
-		// 	}};
-		// }
-		// timeline.push(config.slides.AESTHETIC_QUESTIONS_PRACTICE);
+		timeline.push(config.slides.INTRODUCTION);
+		timeline.push(config.slides.INFORMED_CONSENT);
+		timeline.push(config.slides.DEMOGRAPHICS);
+		timeline.push(config.slides.INSTRUCTIONS);
+		config.slides.AESTHETIC_QUESTIONS_PRACTICE.template_data = () => {
+			return { stimulus: {
+				round_name: $.i18n('study-instructions-phase-practice-title'),
+				phase_id: 'practice',
+				number: config.stimulus_practice.length,
+				names: config.stimulus_practice
+			}};
+		}
+		timeline.push(config.slides.AESTHETIC_QUESTIONS_PRACTICE);
 		timeline.push(config.slides.INSTRUCTIONS_R1);
 		config.slides.AESTHETIC_QUESTIONS_R1.template_data = () => {
 			return {

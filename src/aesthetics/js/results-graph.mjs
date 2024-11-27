@@ -25,7 +25,7 @@ const colors2 = ['rgb(253,212,158)', 'rgb(239,101,72)'];
 let init = (div_name, canvas_width=null, canvas_height=null) => {
   //TODO: better calculate margin
   canvas.size.width = canvas_width || document.getElementById(div_name).clientWidth;
-  canvas.size.height = canvas_height || window.innerHeight;
+  canvas.size.height = canvas.size.width;
   svg = d3.select(`#${div_name}`)
     .append("svg")
     .attr("width", canvas.size.width)
