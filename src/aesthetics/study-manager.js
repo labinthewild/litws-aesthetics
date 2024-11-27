@@ -119,7 +119,7 @@ module.exports = (function(exports) {
 			AESTHETIC_QUESTIONS_R1: {
 				name: "aesthetic_r1",
 				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
-				template: aestheticQuestionPractice,
+				template: aestheticQuestionR1,
 				template_data:{},
 				display_element_id: "aesthetic",
 				display_next_button: false,
@@ -212,16 +212,16 @@ module.exports = (function(exports) {
 		// timeline.push(config.slides.INTRODUCTION);
 		// timeline.push(config.slides.INFORMED_CONSENT);
 		// timeline.push(config.slides.DEMOGRAPHICS);
-		timeline.push(config.slides.INSTRUCTIONS);
-		config.slides.AESTHETIC_QUESTIONS_PRACTICE.template_data = () => {
-			return { stimulus: {
-				round_name: $.i18n('study-instructions-phase-practice-title'),
-				phase_id: 'practice',
-				number: config.stimulus_practice.length,
-				names: config.stimulus_practice
-			}};
-		}
-		timeline.push(config.slides.AESTHETIC_QUESTIONS_PRACTICE);
+		// timeline.push(config.slides.INSTRUCTIONS);
+		// config.slides.AESTHETIC_QUESTIONS_PRACTICE.template_data = () => {
+		// 	return { stimulus: {
+		// 		round_name: $.i18n('study-instructions-phase-practice-title'),
+		// 		phase_id: 'practice',
+		// 		number: config.stimulus_practice.length,
+		// 		names: config.stimulus_practice
+		// 	}};
+		// }
+		// timeline.push(config.slides.AESTHETIC_QUESTIONS_PRACTICE);
 		timeline.push(config.slides.INSTRUCTIONS_R1);
 		config.slides.AESTHETIC_QUESTIONS_R1.template_data = () => {
 			return {
