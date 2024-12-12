@@ -288,17 +288,9 @@ module.exports = (function(exports) {
 		LITW.utils.showSlide("results");
 	}
 
-	function readSummaryData() {
-		$.getJSON( "summary.json", function( data ) {
-			//TODO: 'data' contains the produced summary form DB data
-			//      in case the study was loaded using 'index.php'
-			//SAMPLE: The example code gets the cities of study partcipants.
-			console.log(data);
-		});
-	}
-
 	function bootstrap() {
-		let good_config = LITW.engine.configure_study(getPreLoad(), config.languages, configureTimeline());
+		let good_config = LITW.engine.configure_study(getPreLoad(), config.languages,
+			configureTimeline(), config.study_id);
 		if (good_config){
 			LITW.engine.start_study();
 		} else {
