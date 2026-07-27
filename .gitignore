@@ -2,6 +2,8 @@
 .DS_Store
 .idea
 __pycache__
+.*.un~
+node_modules
 api/db/template.db
 api/src/vendor/*
 node_modules/

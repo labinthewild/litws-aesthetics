@@ -37,6 +37,7 @@ import aestheticQuestionR1HTML from "./pages/aesthetic-question.html";
 import resultsHTML from "./pages/results.html";
 import resultsFooterHTML from "../templates/results-footer.html";
 import commentsHTML from "../templates/comments.html";
+import interventionHTML from "./pages/intervention.html";
 
 let introTemplate = Handlebars.compile(introHTML);
 let irbTemplate = Handlebars.compile(irb_LITW_HTML);
@@ -48,6 +49,7 @@ let aestheticQuestionR1 = Handlebars.compile(aestheticQuestionR1HTML);
 let resultsTemplate = Handlebars.compile(resultsHTML);
 let resultsFooter = Handlebars.compile(resultsFooterHTML);
 let commentsTemplate = Handlebars.compile(commentsHTML);
+let interventionTemplate = Handlebars.compile(interventionHTML);
 
 import * as results_utils from "./js/results.mjs";
 window.results_utils = results_utils;
@@ -144,6 +146,13 @@ module.exports = (function(exports) {
 					LITW.data.submitDemographics(dem_data);
 				}
 			},
+			INTERVENTION: {
+				name: "intervention",
+				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
+				template: interventionTemplate,
+				display_element_id: "intervention",
+				display_next_button: true,
+			},
 			COMMENTS: {
 				name: "comments",
 				type: LITW.engine.SLIDE_TYPE.SHOW_SLIDE,
@@ -212,6 +221,15 @@ module.exports = (function(exports) {
 		timeline.push(config.slides.INTRODUCTION);
 		timeline.push(config.slides.INFORMED_CONSENT);
 		timeline.push(config.slides.DEMOGRAPHICS);
+		const INTERVENTION_IDS = ["UNIQUE", "RESEARCH", "NEUTRAL"];
+		config.intervention_chosen = INTERVENTION_IDS[Math.floor(Math.random() * INTERVENTION_IDS.length)];
+		config.slides.INTERVENTION.template_data = () => {
+			return {
+				heading: $.i18n(`litw-study-intervention-${config.intervention_chosen}-heading`),
+				body: $.i18n(`litw-study-intervention-${config.intervention_chosen}-body`)
+			};
+		}
+		timeline.push(config.slides.INTERVENTION);
 		timeline.push(config.slides.INSTRUCTIONS);
 		config.slides.AESTHETIC_QUESTIONS_PRACTICE.template_data = () => {
 			return { stimulus: {
@@ -292,6 +310,7 @@ module.exports = (function(exports) {
 		let good_config = LITW.engine.configure_study(getPreLoad(), config.languages,
 			configureTimeline(), config.study_id);
 		if (good_config){
+			LITW.data.submitStudyConfig({ intervention: config.intervention_chosen });
 			LITW.engine.start_study();
 		} else {
 			console.error("Study configuration error!");
